@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>InstaStreet</title>
+    <style type="text/css">
+    .container {
+        margin: 0 auto;
+        width: 800px;
+        font-family: "Lucida Console", Monaco, monospace;
+    }
+
+    #inputQuery {
+        margin: .5em;
+        min-width: 200px;
+        font-size: 2em;
+        padding: 0px 8px;
+        display: inline-block;
+        border: 1px solid black;
+    }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div>API calls: <span id="apiCalls">0</span></div>
+    <div id="inputQuery" contenteditable="true"></div>
+    <img id="streetView"/>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var timer;
+    var baseUrl = 'https://maps.googleapis.com/maps/api/streetview?size=640x640&location=';
+    var prevQuery = "moscow";
+
+    var apiCalls = document.getElementById('apiCalls');
+    var inputQuery = document.getElementById('inputQuery');
+    var streetView = document.getElementById('streetView');
+
+    streetView.src = baseUrl + prevQuery;
+    inputQuery.innerText = prevQuery;
+
+    inputQuery.focus();
+
+    var numberCalls = 0;
+
+    inputQuery.onkeyup = function(e) {
+        if (timer) {
+            clearTimeout(timer);
+        }
+
+        var query = inputQuery.innerText.trim();
+
+        if (prevQuery != query) {
+
+            var instantSearch = function() {
+                streetView.src = baseUrl + query;
+                numberCalls++;
+                apiCalls.innerText = numberCalls;
+                prevQuery = query;
+            };
+
+            timer = setTimeout(instantSearch, 200);
+        }
+    };
+})();
+</script>
+</body>
+</html>
